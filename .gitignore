@@ -169,3 +169,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+OLD DATA/
+OLD RUN/
+dataset_test_rgb/
+dataset_train_rgb/
+LAB4/
+1/
