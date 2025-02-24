@@ -1,12 +1,14 @@
 # Road Signs and Traffic Lights Detection
-This repository contains the materials about the project of the "Computer vision" course in the "Physics of Data" master program, University of Padova.
-
-The best description which shows also some results is the report in file LorenzoVigorelliReport.pdf
-Here I describe the main steps of the analysis.
-All the functions I used are in the file Library, which includes also the requirement file.
 
 ## **1. Project Overview**  
-This project focuses on **object detection in street images**, specifically for **traffic lights** and **road signs** (with an emphasis on speed limit signs). The goal is to accurately detect, classify, and extract relevant information from these objects using essentialy **Deep Learning models**.  
+This repository contains the materials about the project of the "Computer vision" course in the "Physics of Data" master program, University of Padova.
+
+This project focuses on **object detection in street images**, specifically for **traffic lights** and **road signs** (with an emphasis on speed limit signs). The goal is to accurately detect, classify, and extract relevant information from these objects using essentialy **Deep Learning models**. 
+
+The best description which also shows some results is the report in file LorenzoVigorelliReport.pdf.
+
+Here following instead I describe the main steps of the analysis.
+All the functions I used are in the file Library, which includes also the requirement file.
 
 ### **Key tasks include:**
 - **Traffic Lights Detection** → Detect and classify based on **color and shape**.
@@ -25,13 +27,13 @@ The dataset consists of images with **annotated bounding boxes** for road object
 ### **Dataset Structure for YOLO**
 To train and evaluate YOLO models, the dataset follows this structure:
 
-dataset/
-    images/
-        train/
-        test/
-    labels/
-        train/
-        test/
+dataset/  
+├── images/  
+│   ├── train/  
+│   ├── test/  
+├── labels/  
+│   ├── train/  
+│   ├── test/  
 Each image must have an associated label file with the format:
 <class_id> <x_center> <y_center> <width> <height>
 
@@ -127,18 +129,18 @@ To evaluate model performance, we use:
 ## **9. Results & Performance Analysis**
 
 ### **Key Findings**
-**Fine-tuning YOLO significantly improved accuracy.**  
-**YOLOv9 outperformed YOLOv5 but is computationally expensive.**  
-**OCR successfully extracted speed limits.**  
-**Detecting left/right-turn traffic lights remains challenging.**  
-**Limited dataset availability affects performance.**  
+- **Fine-tuning YOLO significantly improved accuracy.**  
+- **YOLOv9 outperformed YOLOv5 but is computationally expensive.**  
+- **OCR successfully extracted speed limits.**  
+- **Detecting left/right-turn traffic lights remains challenging.**  
+- **Limited dataset availability affects performance.**  
 
 ---
 
 ## **10. Future Improvements**
-🔹 Optimize **hyperparameter tuning**.  
-🔹 Expand the dataset with **more diverse traffic signs**.  
-🔹 Improve **real-world testing** in varied conditions.  
-🔹 Address **occlusions and partially visible objects**.  
+- Optimize **hyperparameter tuning**.  
+- Expand the dataset with **more diverse traffic signs**.  
+- Improve **real-world testing** in varied conditions.  
+- Address **occlusions and partially visible objects**.  
 
 
