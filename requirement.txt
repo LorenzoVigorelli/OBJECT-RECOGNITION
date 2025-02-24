@@ -1,8 +1,0 @@
-ultralytics
-easyocr
-cv2
-numpy
-tqdm
-pyyaml
-torch
-matplotlib.pyplot

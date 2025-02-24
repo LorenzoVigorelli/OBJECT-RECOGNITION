@@ -1,65 +1,30 @@
-# Object Recognition in Street Images
+# Road Signs and Traffic Lights Detection
+This repository contains the materials about the project of the "Computer vision" course in the "Physics of Data" master program, University of Padova.
 
-This project focuses on object detection in street images, specifically for detecting traffic lights and traffic signals. The process is divided into several key steps, from loading images to applying object detection models.
+The best description which shows also some results is the report in file LorenzoVigorelliReport.pdf
+Here I describe the main steps of the analysis.
+All the functions I used are in the file Library, which includes also the requirement file.
 
-## Steps
+## **1. Project Overview**  
+This project focuses on **object detection in street images**, specifically for **traffic lights** and **road signs** (with an emphasis on speed limit signs). The goal is to accurately detect, classify, and extract relevant information from these objects using essentialy **Deep Learning models**.  
 
-### 1. **Load Images**
+### **Key tasks include:**
+- **Traffic Lights Detection** → Detect and classify based on **color and shape**.
+- **Road Signs Detection** → Detect and classify **speed limits, stop signs, crosswalks**.
+- **Speed Limit Extraction** → Use **OCR (Optical Character Recognition)** to extract numbers from speed limit signs.
 
-There are two sets of images:
+The **main object detection algorithm** used in this project is **YOLO (You Only Look Once)**, specifically **YOLOv5 and YOLOv9**.  
 
-- **Easy Set**: Images where object detection is relatively straightforward.
-- **Hard Set**: Images with more complex conditions for object detection.
 
-Functions for this step:
-- **`importImages(path)`**: Imports all images from a specified folder.
-- **`showImage(preprocessed=[False], number=1)`**: Displays an image (optionally preprocessed).
 
-### 2. **Preprocess Images**
+## **2. Dataset and Structure**  
+The dataset consists of images with **annotated bounding boxes** for road objects. It is divided into:
+- **Easy Set** → Images with clear, well-lit, and easily recognizable objects.
+- **Hard Set** → Images with occlusions, poor lighting, and challenging detection conditions.
 
-Preprocessing is crucial to improve the quality and consistency of input data for object detection. By adjusting various parameters, we can optimize images for specific conditions.
+### **Dataset Structure for YOLO**
+To train and evaluate YOLO models, the dataset follows this structure:
 
-The preprocessing function accepts the following options:
-- **`gamma=[False, 1.5]`**: Apply a gamma transformation for brightness adjustment.
-- **`equalize=False`**: Equalize the histogram to improve contrast.
-- **`grayscale=False`**: Convert the image to grayscale.
-- **`bilateralFilter=False`**: Apply a bilateral filter for noise reduction while preserving edges.
-- **`gaussianBlur=False`**: Apply Gaussian blur to smooth the image.
-
-### 3. **Object Detection**
-
-We implement two models for detecting:
-1. **Traffic Lights**
-2. **Traffic Signals**
-
-The detection models use the **YOLOv5** architecture, pretrained on the **COCO** dataset and fine-tuned for these specific use cases.
-
-#### **Traffic Lights**
-- The dataset includes various traffic light types, classified by color (red, yellow, green) and shape (left-turn, right-turn).
-- **Alternative Approach**: If computational power is limited, use the YOLO model pretrained on COCO and divide the image into three sections. Classify the color based on the prevalent color in the section.
-
-#### **Traffic Signals**
-- The dataset detects multiple traffic signals: traffic lights, stop signs, speed limits, and crosswalks.
-- For speed limit detection, a **CNN** or **OCR** (Tesseract) approach can be applied to extract the text on the signs.
-- **Alternative Approach**: Use the **Hough Transform** to detect circles (useful for speed limit signs) and classify them based on their features. Preprocessing is crucial for optimal results in this approach.
-
-### 4. **YOLO (You Only Look Once)**
-
-YOLO is the primary architecture used for object detection in this project. The choice between different versions of YOLO is an important consideration:
-
-- **YOLOv5**: This model has approximately 8 million parameters. It is lighter and faster, which makes it suitable for real-time detection or cases with limited computational resources. However, it is generally less precise than newer versions.
-  
-- **YOLOv9**: This newer version of YOLO is more accurate but comes with a tradeoff in speed. YOLOv9 has more parameters and is slower to train, making it more suitable for cases where high accuracy is required, and computational resources are available.
-
-For the best results, fine-tuning a pretrained YOLO model on your specific dataset is recommended.
-
-#### **Training the YOLO Model**
-- Fine-tuning a pretrained YOLO model (either YOLOv5 or YOLOv9) on a relevant dataset significantly improves detection performance.
-- For speed limit signs, a dataset with speed limit information as class labels will be required.
-- Training involves providing correctly formatted data and training the model for optimal accuracy.
-
-#### **Dataset Format for YOLO**
-To train and validate the YOLO model, the dataset must be structured as follows:
 dataset/
     images/
         train/
@@ -72,3 +37,108 @@ Each image must have an associated label file with the format:
 
 But generally when downloading a dataset we have an annnotation file with all of the information of the images in a single file, where the information aren't the one we need in YOLO, but the class, bounding box limits (vertical and horizontal) and path of the file.
 So we need to convert our raw data in the correct format.
+
+However, **raw datasets** often use **XML (Pascal VOC) or YAML** formats, requiring conversion.
+
+---
+
+## **3. Data Processing and Annotation Conversion**  
+Since datasets might come in **different annotation formats**, functions are provided to **convert annotations into YOLO format**.
+
+### **YAML to YOLO Conversion**
+This function converts a **YAML annotation file** to YOLO format and copies the images to the correct directory.
+
+### **XML (Pascal VOC) to YOLO Conversion**
+Extracts **bounding box annotations** from an XML file and converts them to **YOLO format**.
+
+### **Label Processing**
+Replaces **text labels** with numeric **class IDs** in YOLO label files.
+
+These functions are defined in convFunc.py file.
+---
+
+## **4. Image Preprocessing**  
+To enhance object detection performance, images undergo **preprocessing** using:
+- **Gamma Correction** → Adjust brightness.
+- **Histogram Equalization** → Enhance contrast.
+- **Grayscale Conversion** → Improve edge detection.
+- **Bilateral Filtering** → Reduce noise while preserving edges.
+- **Gaussian Blur** → Smooth the image.
+
+These preprocessing techniques could help optimize the images before feeding them into the model.
+
+Preprocessing functions are defined in hough.py file.
+
+---
+
+## **5. Object Detection with YOLO**  
+
+### **YOLO Model Selection**
+| Model  | Parameters | Speed | Accuracy |
+|--------|-----------|--------|----------|
+| **YOLOv5** | 9M | Fast | Moderate |
+| **YOLOv9** | 25M | Slower | Higher |
+
+- **YOLOv5** → Faster, lightweight, real-time applications.
+- **YOLOv9** → More accurate but computationally expensive.
+
+### **YOLO Object Detection**
+- **Traffic lights detection** → Detect and classify the traffic lights based on **color**.
+- **Traffic signs detection** → Recognize stop signs, speed limits, and crosswalks.
+
+---
+
+## **6. Speed Limit Sign Detection & OCR**
+For **speed limit extraction**, we use **OCR**, which extracts numerical values from speed limit signs.
+
+### **Speed Limit Detection via Hough Transform**
+An alternative method to detect circular road signs using **Hough Circle Transform**.
+
+---
+
+## **7. YOLO Model Training**
+
+### **Training a YOLO Model**
+Training a YOLO model involves:
+- Providing a correctly formatted **dataset**.
+- Adjusting **hyperparameters** for optimal accuracy.
+- Running the training process to fine-tune the model.
+
+### **Training Modes**
+- **Night Mode** → Optimized for low-light conditions.
+- **Low Data Mode** → Optimized for small datasets.
+- **Regular Mode** → Balanced settings.
+
+The YOLO training functions are in the file yoloTrainingProcess.py
+
+---
+
+## **8. Model Evaluation**
+
+To evaluate model performance, we use:
+- **Loss Functions** → Measures errors in detection.
+- **Precision & Recall** → Evaluates classification accuracy.
+- **F1 Score** → Harmonic mean of precision and recall.
+- **mAP (Mean Average Precision)** → Measures detection accuracy.
+- **Confusion Matrix Analysis** → Helps visualize classification performance.
+
+---
+
+## **9. Results & Performance Analysis**
+
+### **Key Findings**
+**Fine-tuning YOLO significantly improved accuracy.**  
+**YOLOv9 outperformed YOLOv5 but is computationally expensive.**  
+**OCR successfully extracted speed limits.**  
+**Detecting left/right-turn traffic lights remains challenging.**  
+**Limited dataset availability affects performance.**  
+
+---
+
+## **10. Future Improvements**
+🔹 Optimize **hyperparameter tuning**.  
+🔹 Expand the dataset with **more diverse traffic signs**.  
+🔹 Improve **real-world testing** in varied conditions.  
+🔹 Address **occlusions and partially visible objects**.  
+
+

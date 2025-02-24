@@ -1,0 +1,2 @@
+from Library.yoloTrainingProcessing import trainYolo
+trafficSignalsModelv5 = trainYolo(trainDirectory="1/dataset.yaml", outputDirectory='runs/', epochs=100, device="mps", base_model="yolov5s.yaml", mode="automatic")
